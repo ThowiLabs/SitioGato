@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "SitioGato — Capturador web",
+  "version": "2.0.0",
+  "description": "Captura páginas y recursos web en ZIP, genera DESIGN.md y muestra tu gato escribiendo con CSS animado en una capa translúcida.",
+  "action": {
+    "default_title": "SitioGato — Guardar sitio",
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "scripting",
+    "pageCapture",
+    "offscreen",
+    "downloads",
+    "storage",
+    "alarms",
+    "unlimitedStorage"
+  ],
+  "optional_host_permissions": [
+    "https://*/*",
+    "http://*/*"
+  ],
+  "icons": {
+    "16": "icons/cat-16.png",
+    "48": "icons/cat-48.png",
+    "128": "icons/cat-128.png"
+  }
+}

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>SitioGato · Capturador web</title><link rel="stylesheet" href="popup.css"></head>
+<body>
+<header><div class="brand"><span class="cat-icon" aria-hidden="true">🐈</span><div><strong>SitioGato</strong><small>CAPTURADOR WEB · V2</small></div></div><div class="light" title="Listo"></div></header>
+<main>
+<div class="site"><span>SITIO ACTUAL</span><b id="hostname">Abre primero un sitio web</b></div>
+<p class="explainer">Recorre enlaces internos del sitio abierto en Chrome, guarda sus páginas y muestra un <strong>gato realmente animado</strong> sobre la navegación.</p>
+<div class="controls"><div class="control-field"><label for="maxPages">Máximo de páginas</label><input type="number" id="maxPages" min="1" max="100000" value="30" step="1"><label class="unlimited" for="unlimited"><input type="checkbox" id="unlimited"> <span>Sin límite de páginas</span></label></div><div class="control-field"><label for="depth">Profundidad</label><select id="depth"><option value="1">1 salto</option><option value="2" selected>2 saltos</option><option value="3">3 saltos</option><option value="5">5 saltos</option></select></div></div>
+<label class="delay" for="delay">Espera por página<select id="delay"><option value="750">0,75 s · rápido</option><option value="1500" selected>1,5 s · equilibrado</option><option value="3000">3 s · más carga</option><option value="5000">5 s · contenido lento</option></select></label>
+<details class="help-details"><summary>¿Qué significan páginas, saltos y espera?</summary><div class="help-content">
+<p><strong>Máximo de páginas:</strong> total de páginas distintas que intentará guardar, incluida la primera. <strong>Sin límite</strong> elimina ese tope, pero siguen aplicándose profundidad, memoria y tamaño de archivo; detén el recorrido cuando quieras.</p>
+<p><strong>Profundidad:</strong> 1 salto = la página inicial y sus enlaces directos; 2 saltos = también los enlaces de las páginas del primer nivel; 3 y 5 saltos amplían el recorrido. No visita otros orígenes.</p>
+<p><strong>Espera:</strong> tiempo adicional después de cargar una página antes de capturarla. Más espera favorece elementos que aparecen tarde, pero alarga el proceso.</p>
+</div></details>
+<label class="option"><input type="checkbox" id="assets" checked><span>Descargar recursos estáticos accesibles del mismo origen (CSS, JS, imágenes, fuentes y WASM).</span></label>
+<label class="option"><input type="checkbox" id="design" checked><span>Generar <code>DESIGN.md</code> con estilos, colores, fuentes, estructura, animaciones y notas de las páginas.</span></label>
+<div class="actions"><button id="start" type="button">INICIAR CAPTURA <span>↗</span></button><button id="stop" type="button" disabled>DETENER</button></div>
+<div class="monitor"><div><span>ESTADO</span><b id="status">ESPERANDO</b></div><div class="meter"><span id="meterFill"></span></div><p id="progress">0 páginas capturadas</p><p id="current" class="current"></p></div>
+<p class="note">Funciona con páginas públicas o accesibles desde tu sesión en sitios HTTP(S). No evade CAPTCHA, acceso privado ni bloqueos; archivos externos, SPAs o descargas muy grandes pueden quedar incompletos. Solo visita enlaces internos, nunca pulsa compras ni envía formularios.</p>
+</main><script src="popup.js"></script></body></html>

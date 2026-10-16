@@ -1,0 +1,16 @@
+SITIOGATO 2.0
+
+1. Extraer SitioGato-Chrome-Extension-V2.zip.
+2. Abrir chrome://extensions/ y activar Modo desarrollador.
+3. Pulsar "Cargar descomprimida" y escoger la carpeta sitiogato-extension.
+4. Abrir el sitio web deseado y configurar páginas, sin límite, profundidad y espera.
+5. Elegir si deseas recursos estáticos y DESIGN.md; iniciar captura.
+6. Observa al gato escribiendo sobre la página (botones Ⅱ/▶, minimizar y detener).
+7. El archivo ZIP aparece en Descargas/SitioGato.
+
+El gato NO es una imagen: su pata, lápiz, libreta, cabeza y ojos se animan por CSS.
+Sin límite = sin tope de páginas; el recorrido sigue limitado por profundidad,
+los recursos del navegador y el tamaño ZIP.
+Los sitios protegidos y el código privado no se pueden copiar automáticamente.
+
+Lee README.md para detalles y límites.

@@ -1,68 +1,59 @@
-# SitioGato 🐈
+# SitioGato 2.0 — extensión Chrome Manifest V3
 
-**Extensión para Google Chrome (Manifest V3)** que recorre enlaces del mismo sitio y genera un archivo ZIP con capturas de páginas, recursos accesibles y un informe de estilo `DESIGN.md`. Mientras navega, un gato CSS escribe en su libreta sobre un overlay translúcido.
+Captura un sitio desde el navegador en un archivo ZIP. Incluye las páginas que Chrome puede abrir y los recursos accesibles. El gato animado se superpone al sitio mientras recorre las páginas, con el fondo visible, y puede **pausarse, reanudarse o minimizarse**.
 
-**Estado:** v2.0.0 · Proyecto privado · JavaScript, HTML y CSS sin frameworks.
+## Instalación
 
-## Características
+1. Descomprime `SitioGato-Chrome-Extension-V2.zip` en una carpeta estable.
+2. Abre `chrome://extensions/` en Chrome.
+3. Activa **Modo desarrollador** y haz clic en **Cargar descomprimida**.
+4. Selecciona la carpeta `sitiogato-extension` que contiene `manifest.json`.
+5. Abre la página web que deseas guardar, pulsa el icono de SitioGato y configura las opciones.
+6. Concede el permiso del sitio **solo si quieres descargar sus archivos estáticos**. Chrome usa la pestaña activa para navegar y mostrar el gato, y descargará el ZIP al finalizar.
 
-- Rastreo de enlaces del mismo origen, con límite de páginas opcional y profundidad configurable.
-- Capturas MHTML, pantallazos PNG, HTML del DOM renderizado y una versión espejo offline cuando es posible.
-- Recursos CSS, JS, imágenes, fuentes, multimedia y WASM que Chrome puede recuperar con los permisos correspondientes.
-- `DESIGN.md`: resumen automático de fuentes, colores, composición y animaciones observadas.
-- Gato animado con `writeHand`, `writeLine`, `headBob` y `blink`; controles para pausar, minimizar y detener.
-- Exportación local a ZIP, sin servicio backend propio.
+**Si ya tenías instalada V1:** reemplaza los archivos de la carpeta por los de V2 y pulsa **Actualizar** (↻) en `chrome://extensions/`. Si cargaste V1 desde otra ruta, quítala y carga la nueva carpeta para evitar duplicados.
 
-## Instalación en Chrome
+## Opciones del panel
 
-1. Descarga este repositorio o clónalo con acceso autorizado.
-2. Abre `chrome://extensions/`.
-3. Activa **Modo desarrollador**.
-4. Elige **Cargar descomprimida** y selecciona la carpeta raíz del repositorio (contiene `manifest.json`).
-5. Abre el sitio que quieres archivar, pulsa el icono de SitioGato y configura la captura.
+| Ajuste | Qué hace |
+| --- | --- |
+| **Máximo de páginas** | Cantidad total de páginas distintas que se intentarán capturar, incluida la inicial. 30 de forma predeterminada. |
+| **Sin límite de páginas** | Elimina el tope numérico de páginas y desactiva el campo. La captura sigue limitada por profundidad, contenido disponible, recursos del ordenador, el formato ZIP y tu acción **Detener**. No equivale a capacidad infinita. |
+| **Profundidad: 1 salto** | Página inicial y enlaces directos de esa página. |
+| **Profundidad: 2 saltos** | También los enlaces presentes en las páginas alcanzadas con 1 salto. |
+| **Profundidad: 3 / 5 saltos** | Recorridos más extensos; pueden ser mucho más lentos y consumir más memoria. |
+| **Espera por página** | Tiempo extra después de cada carga: 0,75 / 1,5 / 3 / 5 segundos. Ayuda a que aparezca contenido asincrónico. No obliga a terminar todas las descargas de un sitio. |
+| **Incluir archivos estáticos** | Intenta guardar CSS, JS, imágenes, fuentes, audio/vídeo y WASM del mismo origen cuando Chrome tiene permiso. |
+| **Generar DESIGN.md** | Crea un análisis visual automático de los estilos computados: colores, tipografías, variables CSS, navegación, controles, layouts y animaciones identificadas. |
 
-## Parámetros
+## Cómo se anima el gato
 
-| Opción | Qué controla |
-|---|---|
-| Máximo de páginas | Tope de URLs únicas, incluyendo la inicial. |
-| Sin límite | Quita solo el límite numérico; profundidad y memoria siguen acotadas. |
-| Profundidad 1 / 2 / 3 / 5 | Número de niveles de enlaces que se siguen desde la página inicial. |
-| Espera por página | Tiempo extra para que se renderice contenido dinámico. |
-| Archivos estáticos | Captura recursos accesibles del mismo origen. |
-| Generar `DESIGN.md` | Describe el diseño observable de las páginas visitadas. |
+El overlay utiliza el gato en HTML y CSS de tu ejemplo, **no una imagen estática**. Conserva las animaciones: `writeHand` de la pata derecha y el lápiz (1,6 s), `writeLine` del trazo en la libreta (1,6 s), `headBob` de la cabeza (2 s) y `blink` de los ojos (4 s). La animación está activa durante la navegación, incluso si Chrome prefiere menos movimiento; en la esquina superior del panel puedes usar **Ⅱ / ▶** para pausarla o reanudarla. También hay controles de minimizar y detener. El panel es translúcido, por lo que puedes ver la página de fondo.
 
-## Estructura
+## Estructura del ZIP descargado
 
-```text
-SitioGato/
-├── manifest.json          Permisos, background y metadatos
-├── popup.html / popup.css / popup.js
-├── background.js           Navegación y análisis de páginas
-├── overlay.js              Gato animado y panel de progreso
-├── offscreen.html / offscreen.js
-├── zip.js                  Escritura ZIP32
-├── icons/
-└── README.md
-```
+- `index.html`: índice de páginas guardadas.
+- `DESIGN.md`: guía visual observada, si se seleccionó la opción.
+- `snapshots/*.mhtml`: capturas MHTML con recursos integrados cuando Chrome puede guardarlos.
+- `screenshots/*.png`: vista visible de cada página **sin el overlay del gato**.
+- `source/*.html`: DOM renderizado tal como estaba en el navegador, no el código privado original.
+- `mirror/*.html`: intento de HTML navegable offline, enlazando recursos locales cuando es posible.
+- `assets/`: archivos estáticos recuperables del origen inicial; hasta 12 MB por recurso, 85 MB acumulados y 180 archivos.
+- `manifest.json`: URLs, archivos, estado, errores y parámetros de captura.
+- `LEEME.txt`: guía del archivo exportado.
 
-## Desarrollo
+## Compatibilidad y límites
 
-No requiere npm ni un paso de compilación. Para validar el código:
+Puede empezar desde **cualquier URL http:// o https:// normal** que abras en Chrome, no está restringida a Launchpage. Sigue enlaces HTML del **mismo origen** (protocolo + host + puerto). Por seguridad no hace clic en botones ni envía formularios. No copia todo Internet, subdominios diferentes ni sitios ajenos al origen elegido.
 
-```bash
-for f in *.js; do node --check "$f"; done
-python3 -m json.tool manifest.json >/dev/null
-```
+- No recupera backend, bases de datos ni fuentes privadas. Tampoco evita CAPTCHA ni restricciones de Vercel u otros servidores.
+- Una página SPA con rutas dinámicas sin enlaces HTML, contenido después de autenticarse, canvas, WebGL o llamadas a APIs puede quedar incompleta.
+- No descarga CDNs de terceros como recursos individuales; el formato MHTML puede conservar algunos elementos que Chrome haya cargado.
+- **Sin límite** significa sin tope numérico de páginas, no sin límites de memoria o tamaño. La cola en memoria se mantiene en un máximo de 8.000 URL pendientes; el máximo técnico del ZIP32 es 4 GiB y Chrome puede terminar antes por memoria. Para sitios enormes, utiliza capturas por secciones.
+- `DESIGN.md` documenta lo observado en el tamaño de pantalla usado, no sustituye un diseño en Figma ni puede garantizar todos los estados responsive o animaciones.
+- No cierres Chrome ni la pestaña durante la captura. En un reinicio completo, una captura en curso puede interrumpirse.
+- Si la opción de recursos está activada, Chrome solicitará permiso de acceso al dominio abierto. Los datos de captura no se suben a un servicio propio.
 
-Para las pruebas integrales es necesario cargar la extensión en Chrome y usar un sitio de prueba local.
+## Desarrolladores
 
-## Seguridad y limitaciones
-
-El usuario inicia la captura de forma explícita. Chrome puede solicitar permisos de host para descargar recursos. Se recorren enlaces HTML del **mismo origen** y no se ejecutan formularios ni acciones de autenticación. No se eluden CAPTCHA ni restricciones de acceso.
-
-Las capturas no incluyen backend, bases de datos ni necesariamente todos los estados de una SPA. Los recursos de CDNs externos pueden aparecer integrados en MHTML, pero no se garantiza su descarga individual. El modo `Sin límite` no evita límites físicos de memoria, tamaño de ZIP o la cola de URL. Consulta `INSTRUCCIONES.txt` para detalles operativos.
-
-## Licencia
-
-Código reservado en un repositorio privado de ThowiLabs. No se concede autorización pública para reutilizar o redistribuirlo.
+Código local HTML/CSS/JS sin dependencias externas para capturar, generar `DESIGN.md` o montar ZIP. El empaquetador ZIP32 está en `zip.js`; el análisis visual se obtiene con `getComputedStyle` y reglas CSS visibles en `background.js`; el ZIP y `DESIGN.md` se generan en `offscreen.js`.
