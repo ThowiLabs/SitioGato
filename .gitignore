@@ -1,0 +1,8 @@
+*.zip
+*.log
+.DS_Store
+.env
+.env.*
+node_modules/
+coverage/
+tests/output/
